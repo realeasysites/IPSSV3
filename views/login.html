@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Imagepro Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0c0c0d;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111;padding:20px}
+.box{background:#fff;border-radius:16px;padding:32px;width:min(380px,100%);box-shadow:0 10px 0 #ffd200}
+img{width:220px;display:block;margin:0 auto 18px}h1{font-size:20px;text-align:center;margin:0 0 18px}
+input{width:100%;padding:13px;border:2px solid #ddd;border-radius:10px;font-size:16px;margin-bottom:12px}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:#ffd200;font-weight:800;font-size:16px;cursor:pointer}
+button:disabled{opacity:.6}.err{color:#c0221d;font-weight:600;min-height:1.3em;margin:10px 0 0;text-align:center}
+</style></head><body>
+<form class="box" id="f">
+<img src="/img/logo-wordmark.png" alt="Imagepro Screenprint">
+<h1>Lead dashboard</h1>
+<input type="password" id="pw" placeholder="Password" autocomplete="current-password" autofocus required>
+<button id="b" type="submit">Sign in</button>
+<p class="err" id="e"></p>
+</form>
+<script>
+var f=document.getElementById('f'),e=document.getElementById('e'),b=document.getElementById('b');
+fetch('/admin/status').then(function(r){return r.json()}).then(function(s){if(!s.loginEnabled)e.textContent='Login is not set up yet. Set ADMIN_PASSWORD in the host settings.'}).catch(function(){});
+f.addEventListener('submit',function(ev){ev.preventDefault();e.textContent='';b.disabled=true;
+fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('pw').value})})
+.then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+.then(function(x){if(x.ok)location.reload();else{e.textContent=x.j.error||'Could not sign in.';b.disabled=false}})
+.catch(function(){e.textContent='Network error.';b.disabled=false})});
+</script></body></html>

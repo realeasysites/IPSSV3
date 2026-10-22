@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Imagepro Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f1ea;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111}
+header{background:#0c0c0d;color:#fff;padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header img{height:34px;background:#fff;border-radius:6px;padding:3px}header h1{font-size:18px;margin:0;flex:1}
+header a{color:#ffd200;font-weight:700;text-decoration:none;font-size:14px}
+main{max-width:1000px;margin:0 auto;padding:18px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}.tabs button{padding:9px 18px;border:0;border-radius:999px;background:#ddd9cc;font-weight:700;cursor:pointer}.tabs button.on{background:#0c0c0d;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:#fff;border-radius:12px;padding:14px}.stat b{display:block;font-size:28px}.stat span{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.06em}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:22px}
+.panel{background:#fff;border-radius:12px;padding:14px}.panel h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#666}
+.panel li{display:flex;justify-content:space-between;padding:3px 0;font-size:14px;list-style:none}.panel ul{margin:0;padding:0}
+.bar{display:flex;gap:10px;align-items:center;margin:8px 0 14px;flex-wrap:wrap}.bar h2{margin:0;font-size:18px;flex:1}
+.bar a,.bar select{padding:8px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;font-weight:600;text-decoration:none;color:#111;font-size:14px}
+.lead{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border-left:6px solid #ffd200}
+.lead.won{border-color:#1a9c4b}.lead.lost{border-color:#aaa;opacity:.8}.lead.contacted,.lead.quoted{border-color:#3d7be0}
+.lead h3{margin:0;font-size:17px}.lead .meta{color:#666;font-size:13px;margin:2px 0 10px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 14px;font-size:14px;margin-bottom:10px}.kv small{display:block;color:#888;font-size:11px;text-transform:uppercase}
+.details{background:#f7f5ee;border-radius:8px;padding:10px;font-size:14px;white-space:pre-wrap;margin-bottom:10px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.acts a,.acts button,.acts select{padding:8px 13px;border-radius:8px;border:1px solid #ccc;background:#fff;font:inherit;font-size:14px;font-weight:600;text-decoration:none;color:#111;cursor:pointer}
+.acts .del{border-color:#e5322d;color:#c0221d;margin-left:auto}
+textarea{width:100%;margin-top:8px;border:1px solid #ccc;border-radius:8px;padding:8px;font:inherit;font-size:14px}
+.empty{text-align:center;color:#777;padding:40px}
+</style></head><body>
+<header><img src="/img/logo-wordmark.png" alt=""><h1>Lead dashboard</h1><a href="/" target="_blank">View site</a><a href="/admin/logout">Sign out</a></header>
+<main>
+<div class="tabs" id="tabs"><button data-d="d7" class="on">7 days</button><button data-d="d30">30 days</button><button data-d="d90">90 days</button></div>
+<div class="stats" id="stats"></div>
+<div class="panels" id="panels"></div>
+<div class="bar"><h2>Quote requests <span id="count"></span></h2>
+<select id="filter"><option value="">All statuses</option><option>new</option><option>contacted</option><option>quoted</option><option>won</option><option>lost</option></select>
+<a href="/admin/api/export.csv">Export CSV</a></div>
+<div id="leads"></div>
+</main>
+<script>
+var STATS=null,LEADS=[],STATUSES=['new','contacted','quoted','won','lost'],RANGE='d7';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function api(path,opt){return fetch('/admin/api'+path,Object.assign({credentials:'same-origin'},opt||{})).then(function(r){if(r.status===401){location.reload();throw 0}return r.json()})}
+function renderStats(){if(!STATS)return;var s=STATS[RANGE];
+var items=[['Visitors',s.visitors],['Page views',s.views],['Calls tapped',s.calls],['Texts tapped',s.texts],['Quote requests',s.leads],['Contact rate',s.contactRate+'%']];
+document.getElementById('stats').innerHTML=items.map(function(i){return'<div class="stat"><b>'+esc(i[1])+'</b><span>'+i[0]+'</span></div>'}).join('');
+function list(t,a,k){return'<div class="panel"><h3>'+t+'</h3><ul>'+(a.length?a.map(function(x){return'<li><span>'+esc(x[k])+'</span><b>'+x.n+'</b></li>'}).join(''):'<li>No data yet</li>')+'</ul></div>'}
+document.getElementById('panels').innerHTML=list('Traffic sources',s.sources,'source')+list('Top pages',s.pages,'path')+list('Devices',s.devices,'device')}
+function renderLeads(){var f=document.getElementById('filter').value;var rows=LEADS.filter(function(l){return!f||l.status===f});
+document.getElementById('count').textContent='('+rows.length+')';
+if(!rows.length){document.getElementById('leads').innerHTML='<div class="empty">No requests yet.</div>';return}
+document.getElementById('leads').innerHTML=rows.map(function(l){var ph=String(l.phone).replace(/[^\d+]/g,'');
+function kv(k,v){return v?'<div><small>'+k+'</small>'+esc(v)+'</div>':''}
+return'<div class="lead '+esc(l.status)+'" data-id="'+l.id+'"><h3>'+esc(l.name)+'</h3><div class="meta">'+esc(l.created_at)+' UTC · via '+esc(l.source||'direct')+'</div>'
++'<div class="kv">'+kv('Phone',l.phone)+kv('Email',l.email)+kv('Item',l.item)+kv('Quantity',l.quantity)+kv('Print type',l.method)+kv('Needed by',l.deadline)+kv('Prefers',l.contact_pref)+'</div>'
++(l.details?'<div class="details">'+esc(l.details)+'</div>':'')
++'<div class="acts"><a href="tel:'+esc(ph)+'">Call</a><a href="sms:'+esc(ph)+'">Text</a>'+(l.email?'<a href="mailto:'+esc(l.email)+'">Email</a>':'')
++'<select data-act="status">'+STATUSES.map(function(s){return'<option'+(s===l.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select>'
++'<button class="del" data-act="del">Delete</button></div>'
++'<textarea rows="2" placeholder="Notes (saves when you click away)" data-act="notes">'+esc(l.notes||'')+'</textarea></div>'}).join('')}
+function load(){api('/leads').then(function(d){LEADS=d.leads;STATUSES=d.statuses;renderLeads()});api('/stats').then(function(d){STATS=d;renderStats()})}
+document.getElementById('tabs').addEventListener('click',function(e){var d=e.target.getAttribute('data-d');if(!d)return;RANGE=d;[].forEach.call(this.children,function(b){b.classList.toggle('on',b===e.target)});renderStats()});
+document.getElementById('filter').addEventListener('change',renderLeads);
+var box=document.getElementById('leads');
+function idOf(el){return el.closest('.lead').getAttribute('data-id')}
+function patch(id,body){return api('/leads/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
+box.addEventListener('change',function(e){if(e.target.getAttribute('data-act')==='status'){var id=idOf(e.target);patch(id,{status:e.target.value}).then(function(){LEADS.forEach(function(l){if(String(l.id)===id)l.status=e.target.value});renderLeads()})}});
+box.addEventListener('focusout',function(e){if(e.target.getAttribute('data-act')==='notes'){var id=idOf(e.target);patch(id,{notes:e.target.value});LEADS.forEach(function(l){if(String(l.id)===id)l.notes=e.target.value})}});
+box.addEventListener('click',function(e){if(e.target.getAttribute('data-act')==='del'){var id=idOf(e.target);if(!confirm('Delete this request permanently? This cannot be undone.'))return;api('/leads/'+id,{method:'DELETE'}).then(function(){LEADS=LEADS.filter(function(l){return String(l.id)!==id});renderLeads()})}});
+load();
+</script></body></html>
