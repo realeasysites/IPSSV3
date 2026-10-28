@@ -4,69 +4,504 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Imagepro Dashboard</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f1ea;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111}
-header{background:#0c0c0d;color:#fff;padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-header img{height:34px;background:#fff;border-radius:6px;padding:3px}header h1{font-size:18px;margin:0;flex:1}
-header a{color:#ffd200;font-weight:700;text-decoration:none;font-size:14px}
-main{max-width:1000px;margin:0 auto;padding:18px}
-.tabs{display:flex;gap:8px;margin-bottom:16px}.tabs button{padding:9px 18px;border:0;border-radius:999px;background:#ddd9cc;font-weight:700;cursor:pointer}.tabs button.on{background:#0c0c0d;color:#fff}
+[hidden]{display:none!important}
+*{box-sizing:border-box}body{margin:0;background:#f5f5f5;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#111;font-size:15px}
+header{background:#111;color:#fff;padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header img{height:32px;background:#fff;border-radius:6px;padding:3px}header h1{font-size:17px;margin:0;flex:1;font-weight:500}
+header a{color:#ffd200;font-weight:600;text-decoration:none;font-size:14px}
+main{max-width:1080px;margin:0 auto;padding:18px}
+.tabs{display:flex;gap:4px;margin:0 0 18px;flex-wrap:wrap;border-bottom:2px solid #111}
+.tabs button{padding:10px 14px;border:0;background:none;font:inherit;font-weight:600;cursor:pointer;border-radius:8px 8px 0 0}
+.tabs button.on{background:#111;color:#fff}
+.badge{display:inline-block;min-width:20px;padding:1px 6px;border-radius:10px;background:#d30005;color:#fff;font-size:12px;margin-left:4px}
+.bar{display:flex;gap:10px;align-items:center;margin:4px 0 14px;flex-wrap:wrap}.bar h2{margin:0;font-size:18px;flex:1;font-weight:600}
+.btn,.bar select,.bar a{padding:8px 14px;border-radius:20px;border:1px solid #bbb;background:#fff;font:inherit;font-weight:600;text-decoration:none;color:#111;cursor:pointer;font-size:14px}
+.btn.dark{background:#111;color:#fff;border-color:#111}.btn.red{border-color:#d30005;color:#d30005}
+.btn:disabled{opacity:.5}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px}
+.card h3{margin:0;font-size:16px}.meta{color:#707072;font-size:13px;margin:3px 0 10px}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;background:#eee;margin-left:6px;vertical-align:middle}
+.pill.demo{background:#ffd200}.pill.act{background:#d30005;color:#fff}.pill.off{background:#ddd;color:#555}
+.st-paid,.st-approved,.st-changes_requested{border-left:6px solid #d30005}.st-mockup_sent{border-left:6px solid #1151ff}.st-printing{border-left:6px solid #7a3fd0}.st-ready{border-left:6px solid #007d48}.st-completed,.st-cancelled,.st-awaiting_payment{border-left:6px solid #ccc}
+.item{display:grid;grid-template-columns:110px 1fr auto;gap:14px;padding:12px 0;border-top:1px solid #eee}
+.item .logo{width:110px;height:110px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:12px;color:#888;text-align:center;overflow:hidden}
+.item .logo img{max-width:100%;max-height:100%;object-fit:contain}
+.item h4{margin:0 0 4px;font-size:15px}.item p{margin:0;font-size:14px;color:#444}
+.item a{font-size:13px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px 14px;font-size:14px;margin:10px 0}.kv small{display:block;color:#888;font-size:11px;text-transform:uppercase}
+.alert{background:#fde3dd;color:#8c1d0e;padding:8px 10px;border-radius:8px;font-size:14px;margin:8px 0}
+.proofs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.proofs img{height:90px;border-radius:6px;border:1px solid #ddd}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.acts a,.acts button,.acts select,.acts label.btn{padding:7px 12px;border-radius:20px;border:1px solid #ccc;background:#fff;font:inherit;font-size:13.5px;font-weight:600;text-decoration:none;color:#111;cursor:pointer}
+.acts .btn.dark{background:#111;color:#fff;border-color:#111}
+.acts .del{border-color:#d30005;color:#d30005;margin-left:auto}
+.acts input[type=file]{display:none}
+textarea.notes{width:100%;margin-top:10px;border:1px solid #ccc;border-radius:8px;padding:8px;font:inherit;font-size:14px}
+.empty{text-align:center;color:#777;padding:36px;background:#fff;border-radius:12px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 18px;border-radius:20px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+/* editors */
+.ed{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;border:2px solid #111}
+.ed h3{margin:0 0 4px}.ed .help{color:#707072;font-size:13px;margin:0 0 12px}
+.g{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g .w2{grid-column:span 2}.g .w3{grid-column:1/-1}
+.ed label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;text-transform:uppercase;color:#666}
+.ed label small{text-transform:none;font-weight:400;color:#888}
+.ed input,.ed select,.ed textarea{font:inherit;font-size:15px;padding:9px 10px;border:1px solid #bbb;border-radius:8px;text-transform:none;color:#111;font-weight:400;width:100%}
+.ed .row{flex-direction:row;align-items:center;gap:8px;text-transform:none;font-size:14px;color:#111;font-weight:600}
+.ed .row input{width:auto}
+.rows{display:grid;gap:6px}
+.rows .r{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:6px;align-items:center}
+.rows .r.two{grid-template-columns:1fr 1fr auto}
+.rows .r.three{grid-template-columns:2fr 1fr 2fr auto}
+.rows .r button{border:0;background:#f5f5f5;border-radius:6px;padding:8px 10px;cursor:pointer}
+.ed .acts{margin-top:14px}
+.msg{color:#d30005;font-weight:600}
+.list-row{display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center}
+.list-row .th{width:72px;height:72px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.list-row .th img{width:80%;height:auto}
+.list-row .th img.photo{width:100%;height:100%;object-fit:cover}
+/* print sheet */
+.sheet{background:#fff;border-radius:12px;padding:18px}
+.sheet h3{margin:18px 0 6px;font-size:16px;border-bottom:2px solid #111;padding-bottom:4px}
+.sheet table{border-collapse:collapse;font-size:14px;width:100%}.sheet td,.sheet th{border:1px solid #ddd;padding:6px 8px;text-align:center}.sheet th{background:#f5f5f5}
+.sheet td:first-child,.sheet th:first-child{text-align:left}.sheet .tot{font-weight:800}
+/* leads + traffic */
+.details{background:#f7f5ee;border-radius:8px;padding:10px;font-size:14px;white-space:pre-wrap;margin:8px 0}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
-.stat{background:#fff;border-radius:12px;padding:14px}.stat b{display:block;font-size:28px}.stat span{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.06em}
-.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:22px}
-.panel{background:#fff;border-radius:12px;padding:14px}.panel h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#666}
+.stat{background:#fff;border-radius:12px;padding:14px}.stat b{display:block;font-size:28px}.stat span{font-size:12px;color:#666;text-transform:uppercase}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.panel{background:#fff;border-radius:12px;padding:14px}.panel h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;color:#666}
 .panel li{display:flex;justify-content:space-between;padding:3px 0;font-size:14px;list-style:none}.panel ul{margin:0;padding:0}
-.bar{display:flex;gap:10px;align-items:center;margin:8px 0 14px;flex-wrap:wrap}.bar h2{margin:0;font-size:18px;flex:1}
-.bar a,.bar select{padding:8px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;font-weight:600;text-decoration:none;color:#111;font-size:14px}
-.lead{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border-left:6px solid #ffd200}
-.lead.won{border-color:#1a9c4b}.lead.lost{border-color:#aaa;opacity:.8}.lead.contacted,.lead.quoted{border-color:#3d7be0}
-.lead h3{margin:0;font-size:17px}.lead .meta{color:#666;font-size:13px;margin:2px 0 10px}
-.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 14px;font-size:14px;margin-bottom:10px}.kv small{display:block;color:#888;font-size:11px;text-transform:uppercase}
-.details{background:#f7f5ee;border-radius:8px;padding:10px;font-size:14px;white-space:pre-wrap;margin-bottom:10px}
-.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.acts a,.acts button,.acts select{padding:8px 13px;border-radius:8px;border:1px solid #ccc;background:#fff;font:inherit;font-size:14px;font-weight:600;text-decoration:none;color:#111;cursor:pointer}
-.acts .del{border-color:#e5322d;color:#c0221d;margin-left:auto}
-textarea{width:100%;margin-top:8px;border:1px solid #ccc;border-radius:8px;padding:8px;font:inherit;font-size:14px}
-.empty{text-align:center;color:#777;padding:40px}
+.intro{color:#555;margin:-6px 0 14px;font-size:14px;max-width:760px}
+.tb{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:24px;overflow:hidden}
+.tb img{width:100%;height:100%;object-fit:contain;background:#fff}
+.titems{border-top:1px solid #eee;margin-top:12px;padding-top:8px}
+.titem{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:6px 0}
+.titem .th{width:48px;height:48px;border-radius:6px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.titem .th img{width:80%}.titem .th img.photo{width:100%;height:100%;object-fit:cover}
+.titem h4{margin:0;font-size:14px}.titem p{margin:0;font-size:13px;color:#707072}
+.titem .acts{margin:0}.titem .acts button{padding:5px 10px;font-size:12.5px}
+.sumrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:0 0 14px}
+.person{border-top:1px solid #ddd;padding:10px 0;break-inside:avoid}
+.person h4{margin:0 0 4px;font-size:15px}.person h4 small{font-weight:400;color:#777}
+.person ul{margin:0;padding-left:0;list-style:none;font-size:14px}.person li:before{content:"☐ ";color:#999}
+@media (max-width:720px){.titem{grid-template-columns:48px 1fr}.titem .acts{grid-column:1/-1}.g{grid-template-columns:1fr}.g .w2{grid-column:auto}.item{grid-template-columns:72px 1fr}.item .logo{width:72px;height:72px}.list-row{grid-template-columns:56px 1fr}.list-row .acts{grid-column:1/-1}.rows .r,.rows .r.three{grid-template-columns:1fr 1fr}}
+@media print{header,.tabs,.bar,.no-print,#teamList{display:none!important}body{background:#fff}main{padding:0}.sheet{padding:0}}
 </style></head><body>
-<header><img src="/img/logo-wordmark.png" alt=""><h1>Lead dashboard</h1><a href="/" target="_blank">View site</a><a href="/admin/logout">Sign out</a></header>
+<header><img src="/img/logo-wordmark.png" alt=""><h1>Dashboard</h1><a href="/" target="_blank">View site</a><a href="/packages" target="_blank">Packages</a><a href="/team-stores" target="_blank">Team stores</a><a href="/admin/logout">Sign out</a></header>
 <main>
-<div class="tabs" id="tabs"><button data-d="d7" class="on">7 days</button><button data-d="d30">30 days</button><button data-d="d90">90 days</button></div>
-<div class="stats" id="stats"></div>
-<div class="panels" id="panels"></div>
-<div class="bar"><h2>Quote requests <span id="count"></span></h2>
-<select id="filter"><option value="">All statuses</option><option>new</option><option>contacted</option><option>quoted</option><option>won</option><option>lost</option></select>
-<a href="/admin/api/export.csv">Export CSV</a></div>
-<div id="leads"></div>
+<nav class="tabs" id="tabs">
+  <button data-v="orders" class="on">Orders <span class="badge" id="ordBadge" hidden></span></button>
+  <button data-v="print">Print sheet</button>
+  <button data-v="teams">Team stores</button>
+  <button data-v="packages">Package deals</button>
+  <button data-v="catalog">Custom catalog</button>
+  <button data-v="pricing">Pricing rules</button>
+  <button data-v="leads">Quote requests <span class="badge" id="leadBadge" hidden></span></button>
+  <button data-v="traffic">Traffic</button>
+</nav>
+
+<!-- ORDERS -->
+<section class="view" id="v-orders">
+  <div class="bar"><h2>Online orders <span id="ordCount"></span></h2>
+    <select id="ordFilter"><option value="open">Open orders</option><option value="">All orders</option><option value="paid">Paid, needs proof</option><option value="changes_requested">Changes requested</option><option value="mockup_sent">Waiting on approval</option><option value="approved">Approved, ready to print</option><option value="printing">Printing</option><option value="ready">Ready</option><option value="completed">Done</option><option value="awaiting_payment">Unpaid</option><option value="cancelled">Cancelled</option></select>
+  </div>
+  <div id="orders"></div>
+</section>
+
+<!-- PRINT SHEET -->
+<section class="view" id="v-print" hidden>
+  <div class="bar"><h2>Print sheet</h2>
+    <label><input type="checkbox" class="ps" value="paid" checked> Paid</label><label><input type="checkbox" class="ps" value="approved" checked> Approved</label><label><input type="checkbox" class="ps" value="printing" checked> Printing</label>
+    <button class="btn dark" onclick="window.print()">Print</button></div>
+  <div class="sheet" id="sheet"></div>
+</section>
+
+<!-- TEAM STORES -->
+<section class="view" id="v-teams" hidden>
+  <div id="teamList">
+  <div class="bar"><h2>Team &amp; crew stores</h2><button class="btn dark" id="newStore">+ New team store</button></div>
+  <p class="intro">Each store gets its own link. Everyone orders their own size and pays for their own gear. When the store closes you get one print sheet and a packing list by name. Stores close on their own at the end of the closing date and you get an email.</p>
+  <form class="ed" id="storeForm" hidden>
+    <h3 id="storeTitle">New team store</h3><p class="help">Set up the store, save it, then add the gear.</p>
+    <input type="hidden" name="id">
+    <div class="g">
+      <label class="w2">Store name<input name="name" required placeholder="Hawks Youth Soccer Fall Gear"></label>
+      <label>Status<select name="status"><option value="open">Open (taking orders)</option><option value="draft">Draft (hidden, set it up first)</option><option value="closed">Closed</option></select></label>
+      <label class="w2">Team, league or company<input name="org" placeholder="Hawks Youth Soccer"></label>
+      <label>Closes at the end of<input name="closes_at" type="date"></label>
+      <label class="w3">Description <small>shown at the top of the store</small><textarea name="blurb" rows="2"></textarea></label>
+      <label class="w2">How people get their gear<input name="handoff" placeholder="Orders are bagged by name and handed out at practice."></label>
+      <label>Store link <small>/team/…</small><input name="slug" placeholder="made from the name"></label>
+      <label>Team logo <small>(PNG or JPG)</small><input name="logo" type="file" accept=".jpg,.jpeg,.png,.webp"></label>
+      <label>Team color<input name="accent" type="color" value="#111111"></label>
+      <label>Store code <small>optional, makes it private</small><input name="password" placeholder="crew2026" autocomplete="off"></label>
+      <label>Name on back ($ each) <small>0 = free</small><input name="name_price" inputmode="decimal" placeholder="5"></label>
+      <label>Number ($ each) <small>0 = free</small><input name="number_price" inputmode="decimal" placeholder="3"></label>
+      <div></div>
+      <label>Fundraiser ($ per item) <small>goes back to the team</small><input name="fund_price" inputmode="decimal" placeholder="0"></label>
+      <label>Fundraiser goal ($) <small>optional</small><input name="fund_goal" inputmode="decimal"></label>
+      <div></div>
+      <label>Organizer name<input name="contact_name" placeholder="Coach Smith"></label>
+      <label class="w2">Organizer email <small>gets a summary when the store closes</small><input name="contact_email" type="email"></label>
+      <label class="row"><input type="checkbox" name="listed" value="1" checked> Show on the public Team Stores page</label>
+      <label class="row" id="storeRmLogo" hidden><input type="checkbox" name="remove_logo" value="1"> Remove current logo</label>
+    </div>
+    <div class="acts"><button class="btn dark" type="submit">Save store</button><button class="btn" type="button" data-cancel>Cancel</button><span class="msg" id="storeMsg"></span></div>
+  </form>
+  <form class="ed" id="itemForm" hidden>
+    <h3 id="itemTitle">Add gear</h3><p class="help">Pick a blank from your catalog to fill in the colors and sizes, then set the store price. Upload a picture of the design on the garment if you have one.</p>
+    <input type="hidden" name="id"><input type="hidden" name="store_id">
+    <div class="g">
+      <label class="w3">Start from a catalog item <small>(optional, fills in the details)</small><select name="product_id" id="itemFrom"><option value="">Choose a blank…</option></select></label>
+      <label class="w2">Item name<input name="name" required placeholder="Team Tee"></label>
+      <label>Store price ($ each)<input name="price" inputmode="decimal" required placeholder="18"></label>
+      <label>Placeholder picture<select name="style"><option value="tee">T-shirt</option><option value="longsleeve">Long sleeve</option><option value="hoodie">Hoodie</option><option value="crewneck">Crewneck</option><option value="youth">Youth</option><option value="premium">Premium tee</option><option value="hat">Hat</option><option value="beanie">Beanie</option><option value="sign">Yard sign</option></select></label>
+      <label>Blank / garment<input name="garment"></label>
+      <label>Design picture <small>(optional)</small><input name="design" type="file" accept=".jpg,.jpeg,.png,.webp"></label>
+      <label class="w3">Design note <small>shown to buyers and on the print sheet</small><input name="design_note" placeholder="Front: team logo, 2 colors"></label>
+      <label class="w2">Colors <small>comma separated</small><input name="colors"></label>
+      <label>Order on page<input name="sort" type="number" value="0"></label>
+      <label class="w2">Sizes <small>comma separated</small><input name="sizes" placeholder="YS,YM,YL,S,M,L,XL,2XL"></label>
+      <div></div>
+      <label class="w2">Plus sizes that cost more<input name="plus_sizes" placeholder="2XL,3XL"></label>
+      <label>Plus size charge ($ each)<input name="plus_price" inputmode="decimal"></label>
+      <label class="row"><input type="checkbox" name="personalize" value="1"> Allow name &amp; number</label>
+      <label class="row"><input type="checkbox" name="active" value="1" checked> Show in the store</label>
+      <label class="row" id="itemRmDesign" hidden><input type="checkbox" name="remove_design" value="1"> Remove current picture</label>
+    </div>
+    <div class="acts"><button class="btn dark" type="submit">Save item</button><button class="btn" type="button" data-cancel>Cancel</button><span class="msg" id="itemMsg"></span></div>
+  </form>
+  <div id="stores"></div>
+  </div>
+  <div id="report" hidden></div>
+</section>
+
+<!-- PACKAGES -->
+<section class="view" id="v-packages" hidden>
+  <div class="bar"><h2>Package deals</h2><button class="btn dark" id="newPkg">+ New package</button></div>
+  <form class="ed" id="pkgForm" hidden>
+    <h3 id="pkgTitle">New package</h3><p class="help">A package is a fixed deal, like "100 tees for $399". Customers pick a color, split the sizes to add up to the package size, upload a logo and add it to their bag.</p>
+    <input type="hidden" name="id">
+    <div class="g">
+      <label class="w2">Package name<input name="title" required placeholder="T-Shirt Package"></label>
+      <label>Badge <small>(optional)</small><input name="badge" placeholder="Best value"></label>
+      <label>Shown under<input name="group_name" list="groups" placeholder="T-Shirts"><datalist id="groups"><option>T-Shirts</option><option>Long Sleeve</option><option>Sweatshirts</option><option>Youth</option><option>Premium</option><option>Hats</option></datalist></label>
+      <label>Placeholder picture<select name="style"><option value="tee">T-shirt</option><option value="longsleeve">Long sleeve</option><option value="hoodie">Hoodie</option><option value="crewneck">Crewneck</option><option value="youth">Youth</option><option value="premium">Premium tee</option><option value="hat">Hat</option><option value="beanie">Beanie</option><option value="sign">Yard sign</option></select></label>
+      <label>Blank / garment<input name="garment" placeholder="Gildan Softstyle 64000"></label>
+      <label>Sold as<select name="sell_mode"><option value="pack">A package (fixed number of pieces)</option><option value="each">Each (any quantity)</option></select></label>
+      <label>Pieces in package<input name="pack_qty" type="number" min="1" value="50"></label>
+      <label>Price ($)<input name="price" inputmode="decimal" required placeholder="399"></label>
+      <label class="w3">What's included<input name="includes" placeholder="1 ink color, 1 print location (front or back), free proof before we print"></label>
+      <label class="w3">Description<textarea name="blurb" rows="2"></textarea></label>
+      <label class="w2">Colors <small>comma separated</small><input name="colors" placeholder="White,Black,Navy,Red"></label>
+      <label>Print locations <small>comma separated</small><input name="locations" value="Front,Back"></label>
+      <label class="w2">Sizes <small>comma separated</small><input name="sizes" placeholder="S,M,L,XL,2XL,3XL"></label>
+      <label>Ends on <small>(optional)</small><input name="ends_at" type="date"></label>
+      <label class="w2">Plus sizes that cost more<input name="plus_sizes" placeholder="2XL,3XL"></label>
+      <label>Plus size charge ($ each)<input name="plus_price" inputmode="decimal" placeholder="2"></label>
+      <label>Photo <small>(optional)</small><input name="photo" type="file" accept=".jpg,.jpeg,.png,.webp"></label>
+      <label>Order on page <small>(higher shows first)</small><input name="sort" type="number" value="0"></label>
+      <div></div>
+      <label class="row"><input type="checkbox" name="needs_logo" value="1" checked> Customer uploads a logo (you send a proof)</label>
+      <label class="row"><input type="checkbox" name="active" value="1" checked> Live on the site</label>
+      <label class="row" id="pkgRmPhoto" hidden><input type="checkbox" name="remove_photo" value="1"> Remove current photo</label>
+    </div>
+    <div class="acts"><button class="btn dark" type="submit">Save package</button><button class="btn" type="button" data-cancel>Cancel</button><span class="msg" id="pkgMsg"></span></div>
+  </form>
+  <div id="packages"></div>
+</section>
+
+<!-- CATALOG -->
+<section class="view" id="v-catalog" hidden>
+  <div class="bar"><h2>Custom order catalog</h2><button class="btn dark" id="newProd">+ New item</button></div>
+  <div class="card" id="sanmarCard" style="border-left:6px solid #1151ff"><h3>SanMar connection <span class="pill off" id="sanmarPill">Not connected</span></h3><p class="meta" id="sanmarNote" style="margin-bottom:0"></p></div>
+  <form class="ed" id="prodForm" hidden>
+    <h3 id="prodTitle">New item</h3><p class="help">Every blank customers can build a custom order on. Price per piece drops at each quantity break. Ink color and location charges come from Pricing rules.</p>
+    <input type="hidden" name="id">
+    <div class="g">
+      <label class="w2">Item name<input name="name" required placeholder="Classic Tee"></label>
+      <label>Category<select name="category"><option value="tees">T-Shirts</option><option value="longsleeve">Long Sleeve</option><option value="hoodies">Hoodies</option><option value="crewnecks">Crewnecks</option><option value="youth">Youth</option><option value="hats">Hats &amp; Beanies</option><option value="signs">Yard Signs</option></select></label>
+      <label>Decoration type<select name="kind"><option value="apparel">Screen print (locations + ink colors)</option><option value="hat">Hat (embroidery / patch)</option><option value="sign">Yard sign (sizes, sides, stakes)</option></select></label>
+      <label>Placeholder picture<select name="style"><option value="tee">T-shirt</option><option value="longsleeve">Long sleeve</option><option value="hoodie">Hoodie</option><option value="crewneck">Crewneck</option><option value="youth">Youth</option><option value="premium">Premium tee</option><option value="hat">Hat</option><option value="beanie">Beanie</option><option value="sign">Yard sign</option></select></label>
+      <label>Blank / garment<input name="garment" placeholder="Soft cotton tee"></label>
+      <label>Brand <small>as SanMar lists it</small><input name="brand" placeholder="Port &amp; Company"></label>
+      <label>Style # <small>SanMar style number</small><input name="style_number" placeholder="PC54"></label>
+      <div></div>
+      <label class="w3">Short description<input name="blurb"></label>
+      <label class="w2">Colors <small>comma separated</small><input name="colors"></label>
+      <label>Minimum order<input name="min_qty" type="number" min="1" value="24"></label>
+      <label class="w2">Sizes <small>comma separated</small><input name="sizes" placeholder="S,M,L,XL,2XL,3XL"></label>
+      <label>Photo <small>(optional)</small><input name="photo" type="file" accept=".jpg,.jpeg,.png,.webp"></label>
+      <label class="w2">Plus sizes that cost more<input name="plus_sizes" placeholder="2XL,3XL"></label>
+      <label>Plus size charge ($ each)<input name="plus_price" inputmode="decimal"></label>
+      <div class="w3" id="signSizeBox" hidden><label>Sign sizes &amp; extra charge per sign <small>(the first size is the base price; the sizes field above is filled from these rows)</small></label><div class="rows" id="sizeRows"></div><button class="btn" type="button" id="addSize" style="margin-top:6px">+ Add a size</button></div>
+      <div class="w3"><label>Price per piece by quantity <small>(1 ink color, 1 location · for signs: single-sided, first size)</small></label><div class="rows" id="breakRows"></div><button class="btn" type="button" id="addBreak" style="margin-top:6px">+ Add a price break</button></div>
+      <label>Order on page<input name="sort" type="number" value="0"></label>
+      <label class="row"><input type="checkbox" name="active" value="1" checked> Live on the site</label>
+      <label class="row" id="prodRmPhoto" hidden><input type="checkbox" name="remove_photo" value="1"> Remove current photo</label>
+    </div>
+    <div class="acts"><button class="btn dark" type="submit">Save item</button><button class="btn" type="button" data-cancel>Cancel</button><span class="msg" id="prodMsg"></span></div>
+  </form>
+  <div id="products"></div>
+</section>
+
+<!-- PRICING -->
+<section class="view" id="v-pricing" hidden>
+  <div class="bar"><h2>Pricing rules</h2></div>
+  <form class="ed" id="setForm">
+    <h3>Screen print charges</h3><p class="help">Added per piece on custom orders. The first location and first ink color are included in each item's price.</p>
+    <div class="g">
+      <label>Each extra ink color ($ per piece)<input name="extraInk" inputmode="decimal"></label>
+      <label>Each extra print location ($ per piece)<input name="extraLocation" inputmode="decimal"></label>
+      <label>Most ink colors per location<input name="maxInks" type="number" min="1" max="8"></label>
+      <label class="w2">Print locations customers can pick <small>comma separated</small><input name="locations"></label>
+      <label>Most locations per order<input name="maxLocations" type="number" min="1" max="6"></label>
+    </div>
+    <h3 style="margin-top:20px">Hat decorations</h3><p class="help">Price is added per hat on top of the hat's price.</p>
+    <div class="rows" id="decoRows"></div><button class="btn" type="button" id="addDeco" style="margin-top:6px">+ Add decoration</button>
+    <h3 style="margin-top:20px">Hat add-ons</h3>
+    <div class="rows" id="extraRows"></div><button class="btn" type="button" id="addExtra" style="margin-top:6px">+ Add add-on</button>
+    <h3 style="margin-top:20px">Yard sign options</h3><p class="help">Added per sign on top of the sign's price.</p>
+    <div class="g"><label>Double-sided ($ per sign)<input name="signDouble" inputmode="decimal"></label><label>H-stake ($ per stake)<input name="signStake" inputmode="decimal"></label></div>
+    <div class="acts"><button class="btn dark" type="submit">Save pricing rules</button><span class="msg" id="setMsg"></span></div>
+  </form>
+</section>
+
+<!-- QUOTE REQUESTS -->
+<section class="view" id="v-leads" hidden>
+  <div class="bar"><h2>Quote requests <span id="leadCount"></span></h2><select id="leadFilter"><option value="">All statuses</option><option>new</option><option>contacted</option><option>quoted</option><option>won</option><option>lost</option></select><a href="/admin/api/export.csv">Export CSV</a></div>
+  <div id="leads"></div>
+</section>
+
+<!-- TRAFFIC -->
+<section class="view" id="v-traffic" hidden>
+  <div class="bar"><h2>Traffic</h2><select id="range"><option value="d7">Last 7 days</option><option value="d30">Last 30 days</option><option value="d90">Last 90 days</option></select></div>
+  <div class="stats" id="stats"></div><div class="panels" id="panels"></div>
+</section>
 </main>
+<div class="toast" id="toast"></div>
 <script>
-var STATS=null,LEADS=[],STATUSES=['new','contacted','quoted','won','lost'],RANGE='d7';
+var $=function(s,c){return(c||document).querySelector(s)},$$=function(s,c){return[].slice.call((c||document).querySelectorAll(s))};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function api(path,opt){return fetch('/admin/api'+path,Object.assign({credentials:'same-origin'},opt||{})).then(function(r){if(r.status===401){location.reload();throw 0}return r.json()})}
-function renderStats(){if(!STATS)return;var s=STATS[RANGE];
-var items=[['Visitors',s.visitors],['Page views',s.views],['Calls tapped',s.calls],['Texts tapped',s.texts],['Quote requests',s.leads],['Contact rate',s.contactRate+'%']];
-document.getElementById('stats').innerHTML=items.map(function(i){return'<div class="stat"><b>'+esc(i[1])+'</b><span>'+i[0]+'</span></div>'}).join('');
-function list(t,a,k){return'<div class="panel"><h3>'+t+'</h3><ul>'+(a.length?a.map(function(x){return'<li><span>'+esc(x[k])+'</span><b>'+x.n+'</b></li>'}).join(''):'<li>No data yet</li>')+'</ul></div>'}
-document.getElementById('panels').innerHTML=list('Traffic sources',s.sources,'source')+list('Top pages',s.pages,'path')+list('Devices',s.devices,'device')}
-function renderLeads(){var f=document.getElementById('filter').value;var rows=LEADS.filter(function(l){return!f||l.status===f});
-document.getElementById('count').textContent='('+rows.length+')';
-if(!rows.length){document.getElementById('leads').innerHTML='<div class="empty">No requests yet.</div>';return}
-document.getElementById('leads').innerHTML=rows.map(function(l){var ph=String(l.phone).replace(/[^\d+]/g,'');
-function kv(k,v){return v?'<div><small>'+k+'</small>'+esc(v)+'</div>':''}
-return'<div class="lead '+esc(l.status)+'" data-id="'+l.id+'"><h3>'+esc(l.name)+'</h3><div class="meta">'+esc(l.created_at)+' UTC · via '+esc(l.source||'direct')+'</div>'
-+'<div class="kv">'+kv('Phone',l.phone)+kv('Email',l.email)+kv('Item',l.item)+kv('Quantity',l.quantity)+kv('Print type',l.method)+kv('Needed by',l.deadline)+kv('Prefers',l.contact_pref)+'</div>'
-+(l.details?'<div class="details">'+esc(l.details)+'</div>':'')
-+'<div class="acts"><a href="tel:'+esc(ph)+'">Call</a><a href="sms:'+esc(ph)+'">Text</a>'+(l.email?'<a href="mailto:'+esc(l.email)+'">Email</a>':'')
-+'<select data-act="status">'+STATUSES.map(function(s){return'<option'+(s===l.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select>'
-+'<button class="del" data-act="del">Delete</button></div>'
-+'<textarea rows="2" placeholder="Notes (saves when you click away)" data-act="notes">'+esc(l.notes||'')+'</textarea></div>'}).join('')}
-function load(){api('/leads').then(function(d){LEADS=d.leads;STATUSES=d.statuses;renderLeads()});api('/stats').then(function(d){STATS=d;renderStats()})}
-document.getElementById('tabs').addEventListener('click',function(e){var d=e.target.getAttribute('data-d');if(!d)return;RANGE=d;[].forEach.call(this.children,function(b){b.classList.toggle('on',b===e.target)});renderStats()});
-document.getElementById('filter').addEventListener('change',renderLeads);
-var box=document.getElementById('leads');
-function idOf(el){return el.closest('.lead').getAttribute('data-id')}
-function patch(id,body){return api('/leads/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
-box.addEventListener('change',function(e){if(e.target.getAttribute('data-act')==='status'){var id=idOf(e.target);patch(id,{status:e.target.value}).then(function(){LEADS.forEach(function(l){if(String(l.id)===id)l.status=e.target.value});renderLeads()})}});
-box.addEventListener('focusout',function(e){if(e.target.getAttribute('data-act')==='notes'){var id=idOf(e.target);patch(id,{notes:e.target.value});LEADS.forEach(function(l){if(String(l.id)===id)l.notes=e.target.value})}});
-box.addEventListener('click',function(e){if(e.target.getAttribute('data-act')==='del'){var id=idOf(e.target);if(!confirm('Delete this request permanently? This cannot be undone.'))return;api('/leads/'+id,{method:'DELETE'}).then(function(){LEADS=LEADS.filter(function(l){return String(l.id)!==id});renderLeads()})}});
-load();
+function money(c){return'$'+(Number(c||0)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(/\.00$/,'')}
+function dollars(c){return(Number(c||0)/100).toFixed(2).replace(/\.00$/,'')}
+function toast(t){var el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove('on')},2400)}
+function api(p,o){return fetch('/admin/api'+p,Object.assign({credentials:'same-origin'},o||{})).then(function(r){if(r.status===401){location.reload();throw 0}return r.json()})}
+function J(m,b){return{method:m,headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}}
+$('#tabs').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$$('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});
+  var v=b.getAttribute('data-v');$$('.view').forEach(function(s){s.hidden=s.id!=='v-'+v});if(v==='print')renderSheet()});
+
+/* ================= ORDERS ================= */
+var ORDERS=[],LABELS={},OPEN=['paid','changes_requested','mockup_sent','approved','printing','ready'];
+var NEXT={approved:['printing','Start printing'],printing:['ready','Mark ready'],ready:['completed','Mark picked up']};
+function loadOrders(){return api('/orders').then(function(d){ORDERS=d.orders;LABELS=d.statuses;renderOrders();
+  var need=ORDERS.filter(function(o){return['paid','changes_requested','approved'].indexOf(o.status)>-1}).length;var b=$('#ordBadge');b.hidden=!need;b.textContent=need})}
+function renderOrders(){var f=$('#ordFilter').value;var rows=ORDERS.filter(function(o){return f==='open'?OPEN.indexOf(o.status)>-1:(!f||o.status===f)});
+  $('#ordCount').textContent='('+rows.length+')';
+  if(!rows.length){$('#orders').innerHTML='<div class="empty">No orders here yet.</div>';return}
+  $('#orders').innerHTML=rows.map(function(o){var ph=String(o.phone).replace(/[^\d+]/g,'');
+    var items=o.items.map(function(i,k){var logo=i.artwork_file?(i.artworkIsImage?'<img src="/admin/api/orders/'+o.id+'/artwork/'+k+'?view=1" alt="">':'<span>'+esc(i.artwork_name||'Logo file')+'</span>'):'<span>'+(i.no_logo?'Needs help with logo':'No logo')+'</span>';
+      return'<div class="item"><div class="logo">'+logo+'</div><div><h4>'+esc(i.title)+'</h4><p>'+i.details.map(esc).join('<br>')+(i.notes?'<br><b>Notes:</b> '+esc(i.notes):'')+'</p>'+(i.artwork_file?'<a href="/admin/api/orders/'+o.id+'/artwork/'+k+'">Download logo: '+esc(i.artwork_name||'file')+'</a>':'')+'</div><b>'+money(i.line)+'</b></div>'}).join('');
+    var kv=function(k,v){return v?'<div><small>'+k+'</small>'+esc(v)+'</div>':''};
+    var proofs=o.mockups.length?'<div class="proofs">'+o.mockups.map(function(m,k){return m.isImage?'<a href="/admin/api/orders/'+o.id+'/proof/'+k+'" target="_blank"><img src="/admin/api/orders/'+o.id+'/proof/'+k+'" alt=""></a>':'<a href="/admin/api/orders/'+o.id+'/proof/'+k+'" target="_blank">Proof PDF</a>'}).join('')+'</div>':'';
+    var quick='';
+    if(o.needs_mockup&&(o.status==='paid'||o.status==='changes_requested'))quick='<label class="btn dark">Upload proof &amp; send<input type="file" multiple accept=".png,.jpg,.jpeg,.webp,.pdf" data-a="proof"></label>';
+    else if(o.status==='mockup_sent')quick='<label class="btn">Replace proof<input type="file" multiple accept=".png,.jpg,.jpeg,.webp,.pdf" data-a="proof"></label>';
+    else if(o.status==='paid'&&!o.needs_mockup)quick='<button class="btn dark" data-a="go" data-to="printing">Start printing</button>'+(o.team?'<span class="meta" style="margin:0">Prints with the team store'+(o.team.closes_at?' after '+esc(o.team.closes_at):'')+'</span>':'');
+    else if(NEXT[o.status])quick='<button class="btn dark" data-a="go" data-to="'+NEXT[o.status][0]+'">'+NEXT[o.status][1]+'</button>';
+    var hot=['paid','changes_requested','approved'].indexOf(o.status)>-1;
+    return'<div class="card st-'+esc(o.status)+'" data-id="'+o.id+'"><h3>'+esc(o.ref)+' · '+esc(o.name)+' · '+money(o.total_cents)+'<span class="pill'+(hot?' act':'')+'">'+esc(o.statusLabel)+'</span>'+(o.payment_mode==='demo'?'<span class="pill demo">DEMO</span>':'')+'</h3>'
+    +'<div class="meta">'+(o.team?'<b>Team store: '+esc(o.team.name)+'</b> · ':'')+esc(o.created_at)+' UTC · '+o.items.length+' item'+(o.items.length>1?'s':'')+' · '+o.items.reduce(function(t,i){return t+i.qty},0)+' pieces</div>'
+    +(o.status==='changes_requested'&&o.change_note?'<div class="alert"><b>Customer asked for changes:</b> '+esc(o.change_note)+'</div>':'')
+    +items
+    +'<div class="kv">'+kv('Phone',o.phone)+kv('Email',o.email)+kv('For',o.recipient)+kv('Getting it',o.team?(o.team.handoff||'With the team store'):o.fulfillment==='delivery'?'Delivery: '+(o.address||''):'Pickup')+kv('Need by',o.need_by)+kv('Order notes',o.notes)+'</div>'
+    +proofs
+    +'<div class="acts">'+quick+'<a href="tel:'+esc(ph)+'">Call</a><a href="sms:'+esc(ph)+'">Text</a><a href="mailto:'+esc(o.email)+'">Email</a><a href="'+esc(o.trackUrl)+'" target="_blank">Customer view</a>'
+    +'<select data-a="status">'+Object.keys(LABELS).map(function(s){return'<option value="'+s+'"'+(s===o.status?' selected':'')+'>'+esc(LABELS[s])+'</option>'}).join('')+'</select><button class="del" data-a="del">Delete</button></div>'
+    +'<textarea class="notes" rows="2" placeholder="Private notes (saves when you click away)" data-a="notes">'+esc(o.admin_notes||'')+'</textarea></div>'}).join('')}
+$('#ordFilter').addEventListener('change',renderOrders);
+function oid(el){return el.closest('.card').getAttribute('data-id')}
+function setStatus(id,s){return api('/orders/'+id,J('PATCH',{status:s})).then(function(){toast('Updated');return loadOrders()})}
+$('#orders').addEventListener('click',function(e){var a=e.target.getAttribute('data-a');if(!a)return;var id=oid(e.target);
+  if(a==='go')setStatus(id,e.target.getAttribute('data-to'));
+  if(a==='del'){if(!confirm('Delete this order permanently? Its logo and proof files are deleted too. This cannot be undone.'))return;api('/orders/'+id,{method:'DELETE'}).then(function(){toast('Deleted');loadOrders()})}});
+$('#orders').addEventListener('change',function(e){var a=e.target.getAttribute('data-a');if(!a)return;var id=oid(e.target);
+  if(a==='status')setStatus(id,e.target.value);
+  if(a==='proof'&&e.target.files.length){var fd=new FormData();[].forEach.call(e.target.files,function(f){fd.append('proof',f)});toast('Uploading proof…');
+    api('/orders/'+id+'/proof',{method:'POST',body:fd}).then(function(r){if(r.ok){toast('Proof sent to the customer');loadOrders()}else toast(r.error||'Upload failed')})}});
+$('#orders').addEventListener('focusout',function(e){if(e.target.getAttribute('data-a')==='notes')api('/orders/'+oid(e.target),J('PATCH',{admin_notes:e.target.value}))});
+
+/* ================= PRINT SHEET ================= */
+$$('.ps').forEach(function(c){c.addEventListener('change',renderSheet)});
+var SIZE_ORDER=['YXS','YS','YM','YL','YXL','XS','S','M','L','XL','2XL','3XL','4XL','5XL','One size'];
+function renderSheet(){var st=$$('.ps:checked').map(function(c){return c.value});var all=ORDERS.filter(function(o){return st.indexOf(o.status)>-1});
+  var rows=all.filter(function(o){return!o.team}),tn=all.length-rows.length;var note=tn?'<p class="meta no-print">'+tn+' team store order'+(tn>1?'s are':' is')+' not on this sheet. Team stores print together from Team stores &gt; Print sheet &amp; packing list.</p>':'';
+  if(!rows.length){$('#sheet').innerHTML=note+'<p>Nothing to print for those statuses.</p>';return}
+  var groups={};
+  rows.forEach(function(o){o.items.forEach(function(i){var g=i.product+(i.decoration?' · '+i.decoration:'');var G=groups[g]=groups[g]||{sizes:{},colors:{},orders:{}};G.orders[o.ref]=1;
+    var cl=i.color||'—';G.colors[cl]=G.colors[cl]||{};Object.keys(i.sizes||{}).forEach(function(s){G.sizes[s]=1;G.colors[cl][s]=(G.colors[cl][s]||0)+i.sizes[s]})})});
+  var html=note+'<p style="margin:0;color:#666">'+rows.length+' order'+(rows.length>1?'s':'')+': '+rows.map(function(o){return esc(o.ref+' '+o.name)}).join(', ')+'</p>';
+  Object.keys(groups).forEach(function(g){var G=groups[g];var sz=Object.keys(G.sizes).sort(function(a,b){var x=SIZE_ORDER.indexOf(a),y=SIZE_ORDER.indexOf(b);return(x<0?99:x)-(y<0?99:y)});
+    html+='<h3>'+esc(g)+' <small style="font-weight:400;color:#888">('+Object.keys(G.orders).join(', ')+')</small></h3><table><tr><th>Color</th>'+sz.map(function(s){return'<th>'+esc(s)+'</th>'}).join('')+'<th>Total</th></tr>'
+    +Object.keys(G.colors).map(function(c){var t=0;return'<tr><td>'+esc(c)+'</td>'+sz.map(function(s){var n=G.colors[c][s]||0;t+=n;return'<td>'+(n||'')+'</td>'}).join('')+'<td class="tot">'+t+'</td></tr>'}).join('')+'</table>'});
+  $('#sheet').innerHTML=html}
+
+/* ================= shared editor helpers ================= */
+function F(form,n){return form.elements.namedItem(n)}
+function openEd(form,title,data,fill){form.hidden=false;form.reset();form.querySelector('.msg').textContent='';form.querySelector('h3').textContent=title;F(form,'id').value=data?data.id:'';fill(data);form.scrollIntoView({behavior:'smooth'})}
+$$('[data-cancel]').forEach(function(b){b.addEventListener('click',function(){b.closest('form').hidden=true})});
+function thumb(x){return x.photo?'<img class="photo" src="'+esc(x.photo)+'" alt="">':'<img src="/img/ph/'+esc(x.style||'tee')+'.svg" alt="">'}
+function copyLink(url){(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(function(){toast('Link copied. Paste it in your post.')},function(){prompt('Copy this link:',url)})}
+
+
+/* ================= TEAM STORES ================= */
+var STORES=[],TODAY='',sf2=$('#storeForm'),itf=$('#itemForm');
+function loadStores(){return api('/team-stores').then(function(d){STORES=d.stores;TODAY=d.today;renderStores()})}
+function badge(s){if(s.logo)return'<span class="tb"><img src="'+esc(s.logo)+'" alt=""></span>';var w=String(s.org||s.name).split(/\s+/).filter(Boolean);var ini=(w.length>1?w[0][0]+w[1][0]:(w[0]||'T').slice(0,2)).toUpperCase();
+  var c=/^#[0-9a-f]{6}$/i.test(s.accent)?s.accent:'#111';var n=parseInt(c.slice(1),16);var ink=(0.299*(n>>16)+0.587*((n>>8)&255)+0.114*(n&255))>165?'#111':'#fff';return'<span class="tb" style="background:'+c+';color:'+ink+'">'+esc(ini)+'</span>'}
+function stLabel(s){if(s.status==='draft')return'<span class="pill off">Draft</span>';if(s.open)return'<span class="pill act">Open</span>';return'<span class="pill">Closed</span>'}
+function renderStores(){if(!STORES.length){$('#stores').innerHTML='<div class="empty">No team stores yet. Click New team store.</div>';return}
+  $('#stores').innerHTML=STORES.map(function(s){var t=s.stats;
+    var items=s.items.map(function(i){return'<div class="titem" data-item="'+i.id+'"><div class="th">'+(i.design?'<img class="photo" src="'+esc(i.design)+'" alt="">':'<img src="/img/ph/'+esc(i.style)+'.svg" alt="">')+'</div><div><h4>'+esc(i.name)+(i.active?'':'<span class="pill off">Hidden</span>')+'</h4><p>'+money(i.price_cents)+' · '+esc(String(i.colors||'').split(',').join(', '))+' · '+esc(String(i.sizes||'').split(',').join(', '))+(i.personalize?' · name &amp; number':'')+'</p></div>'
+      +'<div class="acts"><button data-a="iedit">Edit</button><button data-a="itoggle">'+(i.active?'Hide':'Show')+'</button><button class="del" data-a="idel">Delete</button></div></div>'}).join('');
+    return'<div class="card" data-id="'+s.id+'"><div class="list-row"><div class="th" style="background:none">'+badge(s)+'</div><div><h3>'+esc(s.name)+stLabel(s)+(s.password?'<span class="pill">Private · code '+esc(s.password)+'</span>':'')+(s.is_sample?'<span class="pill demo">Sample</span>':'')+'</h3>'
+    +'<div class="meta">'+(s.closes_at?(s.open?'Closes ':'Closed ')+esc(s.closes_at):'No closing date')+' · <b>'+t.orders+'</b> orders · <b>'+t.pieces+'</b> pieces · <b>'+money(t.sales)+'</b> sales'+(s.fund_cents?' · <b>'+money(t.raised)+'</b> raised for the team':'')+'</div><div class="meta">'+esc(s.url)+'</div></div></div>'
+    +'<div class="acts"><button class="btn dark" data-a="report">Print sheet &amp; packing list</button><button data-a="copy">Copy link</button><a href="'+esc(s.url)+'" target="_blank">View store</a><button data-a="edit">Edit</button>'
+    +(s.open?'<button data-a="status" data-to="closed">Close store</button>':'<button data-a="status" data-to="open">'+(s.status==='draft'?'Open store':'Reopen')+'</button>')+'<button data-a="dup">Duplicate</button><button class="del" data-a="del">Delete</button></div>'
+    +'<div class="titems"><b style="font-size:13px;text-transform:uppercase;color:#666">Gear in this store ('+s.items.length+')</b>'+(items||'<p class="meta">No gear yet.</p>')+'<button class="btn" data-a="iadd" style="margin-top:6px">+ Add gear</button></div></div>'}).join('')}
+$('#newStore').addEventListener('click',function(){openEd(sf2,'New team store',null,function(){F(sf2,'status').value='open';F(sf2,'accent').value='#111111';F(sf2,'listed').checked=true;$('#storeRmLogo').hidden=true;
+  var d=new Date(Date.now()+14*864e5);F(sf2,'closes_at').value=d.toISOString().slice(0,10);F(sf2,'handoff').value='Pick up at Imagepro in Biddeford. We will text you when it is ready.'})});
+function fillFrom(){var sel=$('#itemFrom');sel.innerHTML='<option value="">Choose a blank…</option>'+PRODS.map(function(p){return'<option value="'+p.id+'">'+esc(p.name)+(p.garment?' · '+esc(p.garment):'')+'</option>'}).join('')}
+$('#itemFrom').addEventListener('change',function(){var p=PRODS.filter(function(x){return String(x.id)===this.value},this)[0];if(!p)return;
+  if(!F(itf,'name').value)F(itf,'name').value=p.name;F(itf,'style').value=p.style;F(itf,'garment').value=p.garment||'';F(itf,'colors').value=p.colors||'';F(itf,'sizes').value=p.sizes||'';F(itf,'plus_sizes').value=p.plus_sizes||'';F(itf,'plus_price').value=p.plus_cents?dollars(p.plus_cents):''});
+function openItem(card,s,i){fillFrom();card.appendChild(itf);openEd(itf,i?'Edit '+i.name:'Add gear to '+s.name,i,function(i){F(itf,'store_id').value=s.id;$('#itemRmDesign').hidden=!(i&&i.design);
+  if(!i){F(itf,'active').checked=true;F(itf,'personalize').checked=!!(s.name_cents||s.number_cents);return}
+  ['name','style','garment','design_note','colors','sizes','plus_sizes','sort'].forEach(function(k){F(itf,k).value=i[k]==null?'':i[k]});F(itf,'product_id').value=i.product_id||'';
+  F(itf,'price').value=dollars(i.price_cents);F(itf,'plus_price').value=i.plus_cents?dollars(i.plus_cents):'';F(itf,'personalize').checked=!!i.personalize;F(itf,'active').checked=!!i.active})}
+$('#stores').addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b||b.tagName==='A')return;var a=b.getAttribute('data-a');var card=b.closest('.card');if(!card)return;var id=card.getAttribute('data-id');
+  var s=STORES.filter(function(x){return String(x.id)===id})[0];var row=b.closest('[data-item]');var it=row&&s.items.filter(function(x){return String(x.id)===row.getAttribute('data-item')})[0];
+  if(a==='copy')copyLink(s.url);
+  if(a==='report')showReport(s.id);
+  if(a==='edit'){$('#teamList').insertBefore(sf2,$('#stores'));openEd(sf2,'Edit '+s.name,s,function(s){['name','org','status','closes_at','blurb','handoff','slug','accent','password','contact_name','contact_email'].forEach(function(k){F(sf2,k).value=s[k]==null?'':s[k]});
+    F(sf2,'name_price').value=dollars(s.name_cents);F(sf2,'number_price').value=dollars(s.number_cents);F(sf2,'fund_price').value=dollars(s.fund_cents);F(sf2,'fund_goal').value=s.fund_goal_cents?dollars(s.fund_goal_cents):'';F(sf2,'listed').checked=!!s.listed;$('#storeRmLogo').hidden=!s.logo})}
+  if(a==='status'){var to=b.getAttribute('data-to');if(to==='closed'&&!confirm('Close this store now? People won’t be able to order anymore.'))return;var fd=new FormData();fd.append('only_status',to);
+    api('/team-stores/'+id,{method:'PATCH',body:fd}).then(function(r){toast(to==='closed'?'Store closed':r.moved?'Store open. Closing date moved to '+r.moved:'Store open');loadStores()})}
+  if(a==='dup')api('/team-stores/'+id+'/duplicate',{method:'POST'}).then(function(){toast('Copied as a draft. Edit it, set a closing date and open it.');loadStores()});
+  if(a==='del'){if(!confirm('Delete this store and its gear? The link stops working. Orders already placed stay in Orders.'))return;api('/team-stores/'+id,{method:'DELETE'}).then(function(){toast('Deleted');loadStores()})}
+  if(a==='iadd')openItem(card,s,null);
+  if(a==='iedit')openItem(card,s,it);
+  if(a==='itoggle'){var f2=new FormData();f2.append('only_active',it.active?'0':'1');api('/team-items/'+it.id,{method:'PATCH',body:f2}).then(function(){toast(it.active?'Hidden from the store':'Showing in the store');loadStores()})}
+  if(a==='idel'){if(!confirm('Remove '+it.name+' from this store?'))return;api('/team-items/'+it.id,{method:'DELETE'}).then(function(){toast('Removed');loadStores()})}});
+sf2.addEventListener('submit',function(e){e.preventDefault();var fd=new FormData(sf2),id=fd.get('id');fd.delete('id');
+  fd.set('listed',F(sf2,'listed').checked?'1':'0');fd.set('remove_logo',F(sf2,'remove_logo').checked?'1':'0');if(!fd.get('logo')||!fd.get('logo').size)fd.delete('logo');
+  api(id?'/team-stores/'+id:'/team-stores',{method:id?'PATCH':'POST',body:fd}).then(function(r){if(!r.ok){$('#storeMsg').textContent=r.error||'Could not save';return}sf2.hidden=true;toast(id?'Store saved':'Store created. Now add the gear.');loadStores()})});
+itf.addEventListener('submit',function(e){e.preventDefault();var fd=new FormData(itf),id=fd.get('id'),sid=fd.get('store_id');fd.delete('id');fd.delete('store_id');
+  fd.set('personalize',F(itf,'personalize').checked?'1':'0');fd.set('active',F(itf,'active').checked?'1':'0');fd.set('remove_design',F(itf,'remove_design').checked?'1':'0');if(!fd.get('design')||!fd.get('design').size)fd.delete('design');
+  api(id?'/team-items/'+id:'/team-stores/'+sid+'/items',{method:id?'PATCH':'POST',body:fd}).then(function(r){if(!r.ok){$('#itemMsg').textContent=r.error||'Could not save';return}itf.hidden=true;$('#teamList').appendChild(itf);toast('Gear saved');loadStores()})});
+
+function showReport(id){api('/team-stores/'+id+'/report').then(function(r){var s=r.store,t=s.stats;
+  var html='<div class="bar no-print"><button class="btn" id="repBack">← All team stores</button><h2></h2><a href="/admin/api/team-stores/'+s.id+'/orders.csv">Download CSV</a><button class="btn dark" onclick="window.print()">Print</button></div>'
+    +'<div class="sheet"><h2 style="margin:0">'+esc(s.name)+'</h2><p class="meta">'+(s.closes_at?(s.open?'Closes ':'Closed ')+esc(s.closes_at)+' · ':'')+esc(s.handoff||'')+'</p>'
+    +'<div class="sumrow"><div class="stat"><b>'+t.orders+'</b><span>Orders</span></div><div class="stat"><b>'+t.pieces+'</b><span>Pieces</span></div><div class="stat"><b>'+money(t.sales)+'</b><span>Sales</span></div>'+(s.fund_cents?'<div class="stat"><b>'+money(t.raised)+'</b><span>Raised for team</span></div>':'')+'</div>';
+  var keys=Object.keys(r.run);
+  if(!keys.length)html+='<p>No paid orders yet. When people order, the print run and packing list show up here.</p>';
+  keys.forEach(function(k){var G=r.run[k];var sz=Object.keys(G.sizes).sort(function(a,b){var x=SIZE_ORDER.indexOf(a),y=SIZE_ORDER.indexOf(b);return(x<0?99:x)-(y<0?99:y)});
+    html+='<h3>'+esc(k)+'</h3><table><tr><th>Color</th>'+sz.map(function(z){return'<th>'+esc(z)+'</th>'}).join('')+'<th>Total</th></tr>'
+      +Object.keys(G.colors).map(function(c){var tt=0;return'<tr><td>'+esc(c)+'</td>'+sz.map(function(z){var n=G.colors[c][z]||0;tt+=n;return'<td>'+(n||'')+'</td>'}).join('')+'<td class="tot">'+tt+'</td></tr>'}).join('')+'</table>';
+    if(G.pers.length)html+='<p style="margin:10px 0 4px;font-weight:700">Names &amp; numbers</p><table><tr><th>For</th><th>Color</th><th>Size</th><th>Qty</th><th>Name on back</th><th>Number</th></tr>'+G.pers.map(function(p){return'<tr><td>'+esc(p.who)+' <small>'+esc(p.ref)+'</small></td><td>'+esc(p.color)+'</td><td>'+esc(p.size)+'</td><td>'+p.qty+'</td><td><b>'+esc(p.name)+'</b></td><td><b>'+esc(p.number)+'</b></td></tr>'}).join('')+'</table>'});
+  if(r.people.length){html+='<h3>Packing list by person ('+r.people.length+')</h3>'+r.people.slice().sort(function(a,b){return(a.recipient||a.name).localeCompare(b.recipient||b.name)}).map(function(p){return'<div class="person"><h4>'+esc(p.recipient||p.name)+' <small>'+esc(p.ref)+(p.recipient?' · ordered by '+esc(p.name):'')+' · '+esc(p.phone)+'</small></h4><ul>'
+    +p.lines.map(function(l){return'<li>'+l.qty+' × '+esc(l.item)+' · '+esc(l.color)+' · '+esc(l.size)+(l.name?' · <b>'+esc(l.name)+'</b>':'')+(l.number?' · <b>#'+esc(l.number)+'</b>':'')+'</li>'}).join('')+'</ul></div>'}).join('')}
+  html+='</div>';
+  $('#report').innerHTML=html;$('#report').hidden=false;$('#teamList').hidden=true;window.scrollTo(0,0);
+  $('#repBack').addEventListener('click',function(){$('#report').hidden=true;$('#teamList').hidden=false})})}
+
+/* ================= PACKAGES ================= */
+var PKGS=[],pf=$('#pkgForm');
+function loadPkgs(){return api('/packages').then(function(d){PKGS=d.packages;renderPkgs()})}
+function renderPkgs(){if(!PKGS.length){$('#packages').innerHTML='<div class="empty">No packages yet. Click New package.</div>';return}
+  $('#packages').innerHTML=PKGS.map(function(p){return'<div class="card list-row" data-id="'+p.id+'"><div class="th">'+thumb(p)+'</div><div><h3>'+esc(p.title)+(p.active?'':'<span class="pill off">Hidden</span>')+(p.is_sample?'<span class="pill demo">Sample price</span>':'')+'</h3>'
+    +'<div class="meta">'+money(p.price_cents)+(p.sell_mode==='pack'?' for '+p.pack_qty+' pieces ('+money(Math.round(p.price_cents/p.pack_qty))+'/pc)':' each')+' · '+esc(p.group_name)+(p.ends_at?' · ends '+esc(p.ends_at):'')+'</div><div class="meta">'+esc(p.url)+'</div></div>'
+    +'<div class="acts"><button data-a="copy">Copy link</button><a href="'+esc(p.url)+'" target="_blank">View</a><button data-a="edit">Edit</button><button data-a="dup">Duplicate</button><button data-a="toggle">'+(p.active?'Hide':'Make live')+'</button><button class="del" data-a="del">Delete</button></div></div>'}).join('')}
+$('#newPkg').addEventListener('click',function(){openEd(pf,'New package',null,function(){F(pf,'locations').value='Front,Back';F(pf,'pack_qty').value=50;F(pf,'needs_logo').checked=true;F(pf,'active').checked=true;$('#pkgRmPhoto').hidden=true})});
+$('#packages').addEventListener('click',function(e){var a=e.target.getAttribute('data-a');if(!a)return;var id=e.target.closest('.card').getAttribute('data-id');var p=PKGS.filter(function(x){return String(x.id)===id})[0];
+  if(a==='copy')copyLink(p.url);
+  if(a==='edit')openEd(pf,'Edit package',p,function(p){['title','badge','group_name','style','garment','sell_mode','pack_qty','includes','blurb','colors','locations','sizes','ends_at','plus_sizes','sort'].forEach(function(k){F(pf,k).value=p[k]==null?'':p[k]});
+    F(pf,'price').value=dollars(p.price_cents);F(pf,'plus_price').value=p.plus_cents?dollars(p.plus_cents):'';F(pf,'needs_logo').checked=!!p.needs_logo;F(pf,'active').checked=!!p.active;$('#pkgRmPhoto').hidden=!p.photo});
+  if(a==='dup')api('/packages/'+id+'/duplicate',{method:'POST'}).then(function(){toast('Copied. The copy is hidden until you edit it and make it live.');loadPkgs()});
+  if(a==='toggle'){var fd=new FormData();fd.append('only_active',p.active?'0':'1');api('/packages/'+id,{method:'PATCH',body:fd}).then(function(){toast(p.active?'Hidden from the site':'Live on the site');loadPkgs()})}
+  if(a==='del'){if(!confirm('Delete this package? Its link will stop working.'))return;api('/packages/'+id,{method:'DELETE'}).then(function(){toast('Deleted');loadPkgs()})}});
+pf.addEventListener('submit',function(e){e.preventDefault();var fd=new FormData(pf),id=fd.get('id');fd.delete('id');
+  fd.set('needs_logo',F(pf,'needs_logo').checked?'1':'0');fd.set('active',F(pf,'active').checked?'1':'0');fd.set('remove_photo',F(pf,'remove_photo').checked?'1':'0');if(!fd.get('photo')||!fd.get('photo').size)fd.delete('photo');
+  api(id?'/packages/'+id:'/packages',{method:id?'PATCH':'POST',body:fd}).then(function(r){if(!r.ok){$('#pkgMsg').textContent=r.error||'Could not save';return}pf.hidden=true;toast('Package saved');loadPkgs()})});
+
+/* ================= CATALOG ================= */
+var PRODS=[],cf=$('#prodForm');
+var CATN={tees:'T-Shirts',longsleeve:'Long Sleeve',hoodies:'Hoodies',crewnecks:'Crewnecks',youth:'Youth',hats:'Hats & Beanies',signs:'Yard Signs'};
+function sizeRow(n,c){var d=document.createElement('div');d.className='r two';d.innerHTML='<input placeholder=\'Size (e.g. 18" x 24")\' value="'+esc(n||'')+'"><input inputmode="decimal" placeholder="Extra $ per sign" value="'+(c!=null?dollars(c):'')+'"><button type="button" aria-label="Remove">✕</button>';d.querySelector('button').onclick=function(){d.remove()};$('#sizeRows').appendChild(d)}
+$('#addSize').addEventListener('click',function(){sizeRow()});
+function signMode(){var on=F(cf,'kind').value==='sign';$('#signSizeBox').hidden=!on;F(cf,'sizes').closest('label').hidden=on;F(cf,'colors').closest('label').hidden=on;F(cf,'plus_sizes').closest('label').hidden=on;F(cf,'plus_price').closest('label').hidden=on;
+  if(on&&!$$('#sizeRows .r').length){sizeRow('18" x 24"',0);sizeRow('24" x 36"',800)}}
+F(cf,'kind').addEventListener('change',signMode);
+function breakRow(q,p){var d=document.createElement('div');d.className='r two';d.innerHTML='<input type="number" min="1" placeholder="Qty (e.g. 24)" value="'+(q||'')+'"><input inputmode="decimal" placeholder="$ per piece" value="'+(p!=null?dollars(p):'')+'"><button type="button" aria-label="Remove">✕</button>';d.querySelector('button').onclick=function(){d.remove()};$('#breakRows').appendChild(d)}
+$('#addBreak').addEventListener('click',function(){breakRow()});
+function loadProds(){return api('/products').then(function(d){PRODS=d.products;renderProds();var c=d.catalog||{};$('#sanmarNote').textContent=c.note||'';$('#sanmarPill').textContent=c.sanmarCredentials?'Login set':'Not connected'})}
+function renderProds(){if(!PRODS.length){$('#products').innerHTML='<div class="empty">No items yet.</div>';return}
+  $('#products').innerHTML=PRODS.map(function(p){var b=p.breaks;return'<div class="card list-row" data-id="'+p.id+'"><div class="th">'+thumb(p)+'</div><div><h3>'+esc(p.name)+(p.active?'':'<span class="pill off">Hidden</span>')+(p.is_sample?'<span class="pill demo">Sample price</span>':'')+'</h3>'
+    +'<div class="meta">'+(p.style_number?'<b>'+esc(((p.brand||'')+' '+p.style_number).trim())+'</b> · ':'')+esc(CATN[p.category]||p.category)+' · '+(p.kind==='hat'?'Hat':p.kind==='sign'?'Yard sign':'Screen print')+' · min '+p.min_qty+' · '+b.map(function(x){return x[0]+'+ '+money(x[1])}).join(' / ')+'</div></div>'
+    +'<div class="acts"><a href="'+esc(p.url)+'" target="_blank">View</a><button data-a="edit">Edit</button><button data-a="toggle">'+(p.active?'Hide':'Make live')+'</button><button class="del" data-a="del">Delete</button></div></div>'}).join('')}
+$('#newProd').addEventListener('click',function(){openEd(cf,'New item',null,function(){$('#breakRows').innerHTML='';$('#sizeRows').innerHTML='';breakRow(24);breakRow(48);breakRow(72);F(cf,'active').checked=true;F(cf,'min_qty').value=24;F(cf,'sizes').value='S,M,L,XL,2XL,3XL';$('#prodRmPhoto').hidden=true;signMode()})});
+$('#products').addEventListener('click',function(e){var a=e.target.getAttribute('data-a');if(!a)return;var id=e.target.closest('.card').getAttribute('data-id');var p=PRODS.filter(function(x){return String(x.id)===id})[0];
+  if(a==='edit')openEd(cf,'Edit item',p,function(p){['name','category','kind','style','brand','style_number','garment','blurb','colors','min_qty','sizes','plus_sizes','sort'].forEach(function(k){F(cf,k).value=p[k]==null?'':p[k]});
+    F(cf,'plus_price').value=p.plus_cents?dollars(p.plus_cents):'';F(cf,'active').checked=!!p.active;$('#prodRmPhoto').hidden=!p.photo;$('#breakRows').innerHTML='';p.breaks.forEach(function(b){breakRow(b[0],b[1])});
+    $('#sizeRows').innerHTML='';if(p.kind==='sign'){var sp=p.sizePrices||{};String(p.sizes||'').split(',').filter(Boolean).forEach(function(z){sizeRow(z,sp[z]||0)})}signMode()});
+  if(a==='toggle'){var fd=new FormData();fd.append('only_active',p.active?'0':'1');api('/products/'+id,{method:'PATCH',body:fd}).then(function(){toast(p.active?'Hidden from the site':'Live on the site');loadProds()})}
+  if(a==='del'){if(!confirm('Delete this item from the custom order catalog?'))return;api('/products/'+id,{method:'DELETE'}).then(function(){toast('Deleted');loadProds()})}});
+cf.addEventListener('submit',function(e){e.preventDefault();var fd=new FormData(cf),id=fd.get('id');fd.delete('id');
+  var br=$$('#breakRows .r').map(function(r){var i=r.querySelectorAll('input');return[i[0].value,i[1].value]}).filter(function(x){return x[0]&&x[1]});
+  fd.set('breaks',JSON.stringify(br));
+  if(F(cf,'kind').value==='sign'){var sr=$$('#sizeRows .r').map(function(r){var i=r.querySelectorAll('input');return[i[0].value.trim(),i[1].value||'0']}).filter(function(x){return x[0]});
+    if(!sr.length){$('#prodMsg').textContent='Add at least one sign size.';return}fd.set('size_prices',JSON.stringify(sr));fd.set('sizes',sr.map(function(x){return x[0].replace(/,/g,' ')}).join(','));fd.set('colors','');fd.set('plus_sizes','')}fd.set('active',F(cf,'active').checked?'1':'0');fd.set('remove_photo',F(cf,'remove_photo').checked?'1':'0');if(!fd.get('photo')||!fd.get('photo').size)fd.delete('photo');
+  api(id?'/products/'+id:'/products',{method:id?'PATCH':'POST',body:fd}).then(function(r){if(!r.ok){$('#prodMsg').textContent=r.error||'Could not save';return}cf.hidden=true;toast('Item saved');loadProds()})});
+
+/* ================= PRICING ================= */
+var sf=$('#setForm');
+function decoRow(d){var x=document.createElement('div');x.className='r three';x.innerHTML='<input placeholder="Name (e.g. Custom patch)" value="'+esc(d&&d.name||'')+'"><input inputmode="decimal" placeholder="$ per hat" value="'+(d?dollars(d.cents):'')+'"><input placeholder="Short description" value="'+esc(d&&d.blurb||'')+'"><button type="button">✕</button>';x.dataset.id=d&&d.id||'';x.querySelector('button').onclick=function(){x.remove()};$('#decoRows').appendChild(x)}
+function extraRow(d){var x=document.createElement('div');x.className='r two';x.innerHTML='<input placeholder="Name (e.g. Text across the back)" value="'+esc(d&&d.name||'')+'"><input inputmode="decimal" placeholder="$ per hat" value="'+(d?dollars(d.cents):'')+'"><button type="button">✕</button>';x.dataset.id=d&&d.id||'';x.querySelector('button').onclick=function(){x.remove()};$('#extraRows').appendChild(x)}
+$('#addDeco').addEventListener('click',function(){decoRow()});$('#addExtra').addEventListener('click',function(){extraRow()});
+function loadSettings(){api('/settings').then(function(d){var s=d.settings;F(sf,'extraInk').value=dollars(s.extraInkCents);F(sf,'extraLocation').value=dollars(s.extraLocationCents);F(sf,'maxInks').value=s.maxInks;F(sf,'maxLocations').value=s.maxLocations;F(sf,'locations').value=s.locations.join(',');F(sf,'signDouble').value=dollars(s.signDoubleCents);F(sf,'signStake').value=dollars(s.signStakeCents);
+  $('#decoRows').innerHTML='';s.hatDecorations.forEach(decoRow);$('#extraRows').innerHTML='';s.hatExtras.forEach(extraRow)})}
+sf.addEventListener('submit',function(e){e.preventDefault();
+  var body={extraInk:F(sf,'extraInk').value,extraLocation:F(sf,'extraLocation').value,maxInks:F(sf,'maxInks').value,maxLocations:F(sf,'maxLocations').value,locations:F(sf,'locations').value,signDouble:F(sf,'signDouble').value,signStake:F(sf,'signStake').value,
+    hatDecorations:$$('#decoRows .r').map(function(r,i){var v=r.querySelectorAll('input');return{id:r.dataset.id||'deco'+Date.now()+i,name:v[0].value,price:v[1].value,blurb:v[2].value}}),
+    hatExtras:$$('#extraRows .r').map(function(r,i){var v=r.querySelectorAll('input');return{id:r.dataset.id||'extra'+Date.now()+i,name:v[0].value,price:v[1].value}})};
+  api('/settings',J('PUT',body)).then(function(r){if(r.ok){toast('Pricing rules saved');loadSettings()}else $('#setMsg').textContent='Could not save'})});
+
+/* ================= QUOTE REQUESTS ================= */
+var LEADS=[],LST=[];
+function loadLeads(){api('/leads').then(function(d){LEADS=d.leads;LST=d.statuses;var n=LEADS.filter(function(l){return l.status==='new'}).length;$('#leadBadge').hidden=!n;$('#leadBadge').textContent=n;renderLeads()})}
+function renderLeads(){var f=$('#leadFilter').value;var rows=LEADS.filter(function(l){return!f||l.status===f});$('#leadCount').textContent='('+rows.length+')';
+  if(!rows.length){$('#leads').innerHTML='<div class="empty">No requests yet.</div>';return}
+  $('#leads').innerHTML=rows.map(function(l){var ph=String(l.phone).replace(/[^\d+]/g,'');function kv(k,v){return v?'<div><small>'+k+'</small>'+esc(v)+'</div>':''}
+  return'<div class="card" data-id="'+l.id+'"><h3>'+esc(l.name)+'<span class="pill'+(l.status==='new'?' act':'')+'">'+esc(l.status)+'</span></h3><div class="meta">'+esc(l.created_at)+' UTC · via '+esc(l.source||'direct')+'</div>'
+  +'<div class="kv">'+kv('Phone',l.phone)+kv('Email',l.email)+kv('Item',l.item)+kv('Quantity',l.quantity)+kv('Print type',l.method)+kv('Needed by',l.deadline)+kv('Prefers',l.contact_pref)+'</div>'
+  +(l.details?'<div class="details">'+esc(l.details)+'</div>':'')
+  +'<div class="acts"><a href="tel:'+esc(ph)+'">Call</a><a href="sms:'+esc(ph)+'">Text</a>'+(l.email?'<a href="mailto:'+esc(l.email)+'">Email</a>':'')+'<select data-a="lstatus">'+LST.map(function(s){return'<option'+(s===l.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select><button class="del" data-a="ldel">Delete</button></div>'
+  +'<textarea class="notes" rows="2" placeholder="Notes (saves when you click away)" data-a="lnotes">'+esc(l.notes||'')+'</textarea></div>'}).join('')}
+$('#leadFilter').addEventListener('change',renderLeads);
+function lid(el){return el.closest('.card').getAttribute('data-id')}
+$('#leads').addEventListener('change',function(e){if(e.target.getAttribute('data-a')==='lstatus')api('/leads/'+lid(e.target),J('PATCH',{status:e.target.value})).then(loadLeads)});
+$('#leads').addEventListener('focusout',function(e){if(e.target.getAttribute('data-a')==='lnotes')api('/leads/'+lid(e.target),J('PATCH',{notes:e.target.value}))});
+$('#leads').addEventListener('click',function(e){if(e.target.getAttribute('data-a')==='ldel'){if(!confirm('Delete this request permanently? This cannot be undone.'))return;api('/leads/'+lid(e.target),{method:'DELETE'}).then(loadLeads)}});
+
+/* ================= TRAFFIC ================= */
+var STATS=null;
+function renderStats(){if(!STATS)return;var s=STATS[$('#range').value];
+  var items=[['Visitors',s.visitors],['Page views',s.views],['Calls tapped',s.calls],['Texts tapped',s.texts],['Quote requests',s.leads],['Contact rate',s.contactRate+'%']];
+  $('#stats').innerHTML=items.map(function(i){return'<div class="stat"><b>'+esc(i[1])+'</b><span>'+i[0]+'</span></div>'}).join('');
+  function list(t,a,k){return'<div class="panel"><h4>'+t+'</h4><ul>'+(a.length?a.map(function(x){return'<li><span>'+esc(x[k])+'</span><b>'+x.n+'</b></li>'}).join(''):'<li>No data yet</li>')+'</ul></div>'}
+  $('#panels').innerHTML=list('Traffic sources',s.sources,'source')+list('Top pages',s.pages,'path')+list('Devices',s.devices,'device')}
+$('#range').addEventListener('change',renderStats);
+
+loadOrders();loadPkgs();loadProds();loadStores();loadSettings();loadLeads();api('/stats').then(function(d){STATS=d;renderStats()});
 </script></body></html>

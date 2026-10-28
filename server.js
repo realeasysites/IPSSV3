@@ -26,14 +26,12 @@ app.use(adminRoutes);
 app.use(express.json({ limit: '32kb' }));
 app.use(publicRoutes);
 
-// Home page: fill in the live domain for canonical/OG tags
-const fs = require('fs');
-const SITE_URL = (process.env.SITE_URL || 'https://imageproscreenprint.com').replace(/\/+$/, '');
-const homeHtml = fs.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8').replace(/%%SITE_URL%%/g, SITE_URL);
-app.get(['/', '/index.html'], (req, res) => {
-  res.setHeader('Cache-Control', 'public, max-age=300');
-  res.type('html').send(homeHtml);
-});
+// Storefront pages + store API (home, package deals, custom order, bag, checkout, order tracking)
+app.use(require('./routes/shop'));
+
+// Product + package photos uploaded from the dashboard
+const { DIRS } = require('./lib/uploads');
+app.use('/media/products', express.static(DIRS.deals, { maxAge: '7d' }));
 
 app.use(
   express.static(path.join(__dirname, 'public'), {
